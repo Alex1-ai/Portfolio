@@ -31,3 +31,11 @@ jobs:
         - name: Run tests
           run: |
               python manage.py test
+        
+        # - name: Deploy
+        #   if: ${{ github.event_name == 'push' && github.ref =='refs/heads/main' && !contains(toJson(github.event.commits.*.message),'#skip')   }}
+        #   env: 
+        #     deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        #   run: |
+        #     curl "$deploy_url"
+

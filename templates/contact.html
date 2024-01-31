@@ -1,0 +1,100 @@
+{% load static %}
+
+{% include 'base.html' %}
+
+{% block content %}
+<!-- Page Title Starts -->
+<section class="title-section text-left text-sm-center revealator-slideup revealator-once revealator-delay1">
+    <h1>get in <span>touch</span></h1>
+    <span class="title-bg">contact</span>
+</section>
+<!-- Page Title Ends -->
+<!-- Main Content Starts -->
+<section class="main-content revealator-slideup revealator-once revealator-delay1">
+    <div class="container">
+        <div class="row">
+            <!-- Left Side Starts -->
+            <div class="col-12 col-lg-4">
+                <h3 class="text-uppercase custom-title mb-0 ft-wt-600 pb-3">Don't be shy !</h3>
+                <p class="open-sans-font mb-3">Feel free to get in touch with me. I am always open to discussing new projects, creative ideas or opportunities to be part of your visions.</p>
+                <p class="open-sans-font custom-span-contact position-relative">
+                    <i class="fa fa-envelope-open position-absolute"></i>
+                    <span class="d-block">mail me</span>alexanderemmanuel1719@mail.com
+                </p>
+                <p class="open-sans-font custom-span-contact position-relative">
+                    <i class="fa fa-phone-square position-absolute"></i>
+                    <span class="d-block">call me</span>+233 50 496 7983 
+                </p>
+                <ul class="social list-unstyled pt-1 mb-5">
+                    <li class="facebook"><a title="Facebook" href="https://www.github.com/Alex1-ai"><i class="fa fa-github"></i></a>
+                    </li>
+                    <li class="twitter"><a title="Twitter" href="https://twitter.com/Alexand75370569"><i class="fa fa-twitter"></i></a>
+                    </li>
+                    <li class="youtube"><a title="Youtube" href="https://stackoverflow.com/users/16333917/alexander-emmanuel"><i class="fa fa-stack-overflow"></i></a>
+                    </li>
+                    <li class="dribbble"><a title="Dribbble" href="https://www.linkedin.com/in/emmanuel-onedibe-b68456203/"><i class="fa fa-linkedin"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Left Side Ends -->
+            <!-- Contact Form Starts -->
+            <div class="col-12 col-lg-8">
+                <form class="contactform" method="POST" action="{% url 'contact' %}" >
+                    {% csrf_token %}
+                    <div class="contactform">
+                        <div class="row">
+                            <div class="col-12 col-md-4">
+                                <input type="text" name="name" required placeholder="YOUR NAME">
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <input type="email" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required placeholder="YOUR EMAIL">
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <input type="text" name="subject" required placeholder="YOUR SUBJECT">
+                            </div>
+                            <div class="col-12">
+                                <textarea name="message" required placeholder="YOUR MESSAGE"></textarea>
+                                <button type="submit" class="btn btn-contact">Send Message</button>
+                            </div>
+                            <div class="col-12 form-message">
+                                            
+                                <span class="output_message  text-center font-weight-600 text-uppercase"></span>
+                            </div>
+                            
+                            {% if message %}
+                                {% for message in messages %}
+                                    {% if message.tags == 'warning' %}
+
+                                        <div class="col-12 form-message">
+                                            
+                                            <span class="output_message error text-center font-weight-600 text-uppercase"> Something went wrong. Try again later(check your internet connection)</span>
+                                        </div>
+                                    {% else %}
+                                        <div class="col-12 form-message">
+                                                
+                                            <span class="output_message success text-center font-weight-600 text-uppercase"> Message sent Successfully </span>
+                                        </div>
+
+                                       
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+            <!-- Contact Form Ends -->
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}
+{% include 'footer.html' %}
+<!-- Template JS Files -->
+
+
+</body>
+
+</html>

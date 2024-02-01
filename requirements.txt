@@ -4,6 +4,7 @@ da-vinci==0.4.0
 Django==3.2.3
 django-admin-thumbnails==0.2.8
 django-jazzmin==2.6.0
+django-cloudinary-storage==0.3.0
 Faker==22.6.0
 gunicorn==21.2.0
 packaging==23.2

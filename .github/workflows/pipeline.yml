@@ -17,6 +17,9 @@ jobs:
           DEBUG: ${{ secrets.DEBUG }}
           EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+          CLOUD_NAME: ${{ secrets.CLOUD_NAME}}
+          API_KEY: ${{ secrets.API_KEY }}
+          API_SECRET: ${{ secrets.API_SECRET }}
           
 
         name: Checkout Repository

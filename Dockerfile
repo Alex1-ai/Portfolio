@@ -1,68 +1,41 @@
-################ In Depth (Detailed) Dockefile ################
-
-# base image
-# lightweight image and highly recommended to keep the size as small as possible and usually, it’s safe in terms of compatibility
-# slim version of the Python 3.8.12 image, which is a lightweight Linux distribution with Python installed.
-FROM python:3.8.12-slim
+ARG PYTHON_VERSION=3.10-slim-buster
 
 
-# setup environment variable (we can give any name)
-# This variable serves as a reference to the path where your application code will be stored inside the Docker image.
-# 'ENV' is a variable outside of a program or script that stores configuration information or settings, and it can be referenced by processes running on the computer.
-# Environment variables are part of the environment in which a process runs. They are key-value pairs, where the key is the variable name, and the value is the information associated with that variable. These variables are used by operating systems, applications, and various scripts to customize behavior and provide configuration information.
-# ENV VARIABLE_NAME=value
-ENV APP_HOME=/app
+ARG DEBIAN_FRONTEND=noninteractive
 
 
-# set the working directory
-# creates an '/app' directory inside the Docker image with path specified by the APP_HOME environment variable. In this case, it creates the /app directory. (application code will be copied into this directory)
-# The -p flag ensures that the parent directories are created if they don't exist.
-# The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY, and ADD instructions that follow it in the Dockerfile. In this case, it sets the working directory to /app.
-RUN mkdir -p /app
-WORKDIR /app
+ARG PORT=8000
 
 
-# set environment variables
-# PYTHONDONTWRITEBYTECODE is an environment variable used by Python. When set to a non-empty value (in this case, 1), it prevents Python from writing ".pyc files" (bytecode) to disk. Bytecode files are compiled Python files, and setting this variable to 1 avoids creating them. This can be useful in certain scenarios, such as containerized or production environments, where writing bytecode files might not be desired.
-# PYTHONUNBUFFERED is another environment variable related to Python. When set to a non-empty value (in this case, 1), it forces Python to run in unbuffered mode. In unbuffered mode, Python doesn't buffer the output, which means that each line is printed as soon as it is generated. This can be beneficial in containerized environments or when running Python in a script, ensuring that the output is immediately visible.
-ENV PYTHONDONTWRITEBYTECODE 1 
+FROM python:${PYTHON_VERSION}
+
+
+ENV PYTHONDONTWRITEBYTECODE 1
+
 ENV PYTHONUNBUFFERED 1
 
+RUN mkdir -p /app
 
-# Copy only the requirements file
-# This line copies only the requirements.txt file (from local) into the Docker image.
-# The dot (.) at the end refers to the current directory in docker image (in this case, the /app directory).
-COPY requirements.txt /app/
-
-
-# Create and activate virtual environment
-# RUN: The RUN instruction is used to execute commands during the Docker image build process. In this case, it runs the command python -m venv /opt/venv, which creates a virtual environment named venv in the /opt directory. The virtual environment is a self-contained directory that contains its own Python interpreter and library.
-# ENV PATH: The ENV instruction sets the PATH environment variable inside the Docker image. It adds the /opt/venv/bin directory to the beginning of the PATH variable. This ensures that when you run commands in the Docker image, the executables from the virtual environment take precedence over system-wide installations.
-# Below two lines just "creates (venv) into (opt) dir and sets the (bin) as a (PATH)". It does not activate the (venv) and we don't need to activate because "docker" itself is a self-contained envrionment.
-# also any command like "python or pip" will always first check into "bin" since it's set in PATH. so dependencies will automatically be installed into "venv"
-# RUN python -m venv /opt/venv
-# ENV PATH="/opt/venv/bin:${PATH}"
+WORKDIR /app
+#install the linux packages, since these are the dependencies of some python packages
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    gcc \
+    cron \
+    wkhtmltopdf \
+    && rm -rf /var/lib/apt/lists/* !
 
 
-# Install dependencies
-# upgrade: It first upgrates the pip version. This is a common practice to prevent potential issues related to outdated pip versions.
-# requirement: This line installs Python dependencies listed in the requirements.txt file using the upgraded pip.
-# Note: Depending on your project, you might need to customize this line. For example, if you're working with a production environment, you might want to use (pip install --no-cache-dir -r requirements.txt) to avoid caching downloaded package files. Caching could lead to a larger image size.
-# --no-cache-dir: This option tells pip not to use the cache when installing packages. By default, pip caches downloaded package files in the user's home directory (~/.cache/pip). When using --no-cache-dir, it avoids caching these files. This is particularly useful in the context of Docker images to reduce the size of the image and to ensure that the Docker image remains consistent across different builds
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt /tmp/requirements.txt
 
 
-# copy whole (local) project code to the working directory (/app) in docker image
-# The COPY instruction is used to copy the contents of the current directory (the directory where the Dockerfile is located, from local) into the working directory ($DOCKERHOME), which is set to /app (in docker image).
-# The first dot (.) represents the path of the files or directories you want to copy from the local directory,
-# second dot (.) represents the path inside the Docker image's working directory ('/app') where you want to paste the copied files or directories.
-# so we are copying "our whole local project" and pasting it into "(/app)d ir of docker image"
-# It's like this COPY from_local to_docker_image
-COPY . /app/
+RUN set -ex && \
+    pip install --upgrade pip && \
+    pip install -r /tmp/requirements.txt && \
+    rm -rf /root/.cache/
 
 
-# start server
-# The CMD instruction in a Dockerfile is used to specify the default command to run when a container is started.
-# ["python3", "manage.py", "runserver"]: This array represents the command and its arguments that will be executed when the container starts.
-# CMD ["python3", "manage.py", "runserver"]
+COPY . /app
+
+
+EXPOSE ${PORT}

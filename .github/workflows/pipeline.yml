@@ -11,6 +11,13 @@ on:
 jobs:
     protfolio_pipeline:
         runs-on: ubuntu-latest
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
+          DEBUG: ${{ secrets.DEBUG }}
+          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+          
 
         name: Checkout Repository
 

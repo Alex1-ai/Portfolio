@@ -4,15 +4,15 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
 django-jazzmin = "*"
 pillow = "*"
 django-admin-thumbnails = "*"
 faker = "*"
 coverage = "*"
-whitenoise = "*"
 gunicorn = "*"
 python-dotenv = "==0.21.1"
+whitenoise = "==6.6.0"
+django = "==3.2.3"
 
 [dev-packages]
 

@@ -1,0 +1,27 @@
+version: 'docker-compose file version'
+
+services:
+  service_1:
+    container_name: container_name
+    # image: existing_image_name_or_pull_from_dockerhub
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "left_port_number:right_port_number"
+    command: >
+      sh -c "some command && some command"
+
+  service_2:
+    container_name: container_name
+    image: some_image_name_from_dockerhub # it will pull image from dockerhub and will run alongside our container
+    volumes:
+      - volume_name:some/path/
+    environment:
+      - some_env_variable_1
+      - some_env_variable_2
+    ports:
+      - "left_port_number:right_port_number"
+
+volumes:
+  volume_name:

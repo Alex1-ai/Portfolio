@@ -1,13 +1,13 @@
 asgiref==3.7.2
 coverage==7.4.1
 da-vinci==0.4.0
-Django==5.0.1
+Django==3.2.3
 django-admin-thumbnails==0.2.8
 django-jazzmin==2.6.0
 Faker==22.6.0
 gunicorn==21.2.0
 packaging==23.2
-pillow==10.2.0
+Pillow==9.4.0
 python-dateutil==2.8.2
 python-dotenv==0.21.1
 shortuuid==1.0.11

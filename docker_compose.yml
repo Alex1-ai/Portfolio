@@ -1,0 +1,33 @@
+####### In Depth Detailed docker-compose file | Simple Explanation #######
+
+# This specifies the version of the Docker Compose file
+# In Docker Compose, the version field specifies the version of the Docker Compose file syntax being used. It allows you to specify which version of the Docker Compose specification your docker-compose.yml file adheres to.
+version: '3.9'
+
+# This section defines the services that will be run by Docker Compose. you can create multiple services such as Django application, a PostgreSQL database, a Redis database, and a Celery worker etc...
+# Currently here in this part-3, we are focusing only on single Django service
+services:
+  # This service is responsible for running the Django application. 
+  # It is built using the Dockerfile in the current directory (.). The Dockerfile contains instructions for building the Docker image for the Django application.
+  # If we give the image_name then it will try to look into the local system, if it doesn't find in local system then try to fetch it from dockerhub.
+  # We are Directly using our own created Dockerfile as an Image and since Dockerfile and docker-compose files are in the same dir, we are giving context as .(dot) which means chose a Dockerfile from the current(same) dir/path.
+  portfolio: # service name (it can be anything)
+    # image: # existing_image_name_or_pull_from_dockerhub 
+
+    # add the environment variables
+    env_file:
+      - .env
+    build: 
+      context: .
+      dockerfile: Dockerfile    
+
+    # This maps port 8000 from the host machine to port 8000 in the Docker container. It allows accessing the Django application from the host machine.
+    # Basically, "left_port:right_port", right port will be moved to left_port number. so we can access it on "left_port number" like this: 127.0.0.1:8000
+    ports:
+      - "8000:8000"
+
+    # This specifies the command to be executed when the Django service starts. It runs the necessary Django management commands, such as creating database migrations and starting the Django development server.
+    command: >
+      sh -c "python3 manage.py makemigrations && 
+             python3 manage.py migrate && 
+             python3 manage.py runserver 0.0.0.0:8000"

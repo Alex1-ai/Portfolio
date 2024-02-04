@@ -208,7 +208,7 @@
                                             {% for gallery_item in portfolio.portfoliogallery_set.all %}
                                                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
                                                 <!-- <div class="carousel-item active"> -->
-                                                    <img src="{{ gallery_item.image.url }}" alt="Portfolio Image" height="300px" width="350px"/>
+                                                    <img src="{{ gallery_item.image.url }}" alt="{{ portfolio.title }}" height="300px" width="350px"/>
                                                 </div>
                                             {% endfor %}
                                         </div>
